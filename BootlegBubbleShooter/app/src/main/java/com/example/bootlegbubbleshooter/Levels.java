@@ -117,10 +117,11 @@ public class Levels extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Levels.this, "It works", Toast.LENGTH_LONG).show();
-                //x_bullet = rocketButton.getX() + 165;
-//                y_bullet = rocketButton.getY() - 90;
-//                bullet.setX(x_bullet);
-//                bullet.setY(y_bullet);
+                x_bullet = rocketButton.getX() +26;
+               y_bullet = rocketButton.getY() - 90;
+                bullet.setX(x_bullet);
+               bullet.setY(y_bullet);
+
                 bullet.setVisibility(View.VISIBLE);
 
 
@@ -148,7 +149,7 @@ public class Levels extends AppCompatActivity {
                 bullet.setVisibility(View.GONE);
 
             case MotionEvent.ACTION_MOVE:
-                rocketButton.setX(event.getX() - 165);
+                rocketButton.setX(event.getX()-90);
         }
         return true;
     }
@@ -159,16 +160,16 @@ public class Levels extends AppCompatActivity {
 //        cloudAY = cloudA.getY();
 //        float cloudAYorig= cloudAY;
 
-//        y_bullet -= 10;
+        y_bullet -= 10;
 //
 //
         boolean temp = false;
-        if (bullet.getY() < 2600) {
+        if (bullet.getY() < 0) {
              temp = true;
-             //bullet.setVisibility(View.GONE);
+             bullet.setVisibility(View.GONE);
         }
 //
-//        bullet.setY(y_bullet);
+           bullet.setY(y_bullet);
 
         //    float cloudAX = cloudA.getX();
 
