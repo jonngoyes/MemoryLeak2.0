@@ -189,10 +189,10 @@ public class Levels extends AppCompatActivity {
             cloudD.setY(0.0f);
         }
 
-        cloudA.setY(cloudA.getY() + 5);
-        cloudB.setY(cloudB.getY() + 5);
-        cloudC.setY(cloudC.getY() + 5);
-        cloudD.setY(cloudD.getY() + 5);
+        cloudA.setY(cloudA.getY() + 1);
+        cloudB.setY(cloudB.getY() + 1);
+        cloudC.setY(cloudC.getY() + 1);
+        cloudD.setY(cloudD.getY() + 1);
         bullet.setY(bullet.getY() - 10);
 
         return temp;

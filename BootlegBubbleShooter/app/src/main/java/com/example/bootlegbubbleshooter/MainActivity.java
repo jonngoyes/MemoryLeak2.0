@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mainscreenmusic;
     private Button SettingsButton;
     private Button StartButton;
+    private Button InstructionButton;
 
     //Screen Size
     private int screenWidth;
@@ -125,6 +126,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Instruction Button
+        Button InstructionButton = (Button) this.findViewById(R.id.instructionbutton);
+        InstructionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartOnClick2();
+            }
+        });
+
         //Fun Fact Data
         data = (TextView) findViewById(R.id.funFact);
         fetchFunFactData process = new fetchFunFactData();
@@ -154,6 +164,13 @@ public class MainActivity extends AppCompatActivity {
     public void StartOnClick()
     {
         Intent intent = new Intent(this,Levels.class);
+        startActivity(intent);
+    }
+
+    //Navigate to Start Button
+    public void StartOnClick2()
+    {
+        Intent intent = new Intent(this,Instructions.class);
         startActivity(intent);
     }
 
