@@ -3,11 +3,13 @@ package com.example.bootlegbubbleshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +19,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Levels extends AppCompatActivity {
+
+    MediaPlayer levelmusic;
+
+    //Pause Button
+    private Button pause;
+    private boolean pause_flag;
 
     // BULLET INITIALIZATION - BEGIN
     ImageView bullet;
@@ -63,6 +71,14 @@ public class Levels extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
+
+        //Levels Background Music
+        levelmusic = MediaPlayer.create(this,R.raw.levanter);
+        levelmusic.setLooping(true);
+        levelmusic.setScreenOnWhilePlaying(true);
+        levelmusic.setVolume(100,100);
+        levelmusic.start();
+
 
         rocketButton = (ImageButton) findViewById(R.id.imageButton6);
         bullet = (ImageView) findViewById(R.id.imageView2);
@@ -135,6 +151,45 @@ public class Levels extends AppCompatActivity {
         q_data.setMovementMethod(new ScrollingMovementMethod());
         fetchQuestionData process2 = new fetchQuestionData();
         process2.execute();
+
+        //Pause Button
+        pause = (Button) findViewById(R.id.pauseButton);
+
+    }
+
+    public void pausePushed(View view)
+    {
+        if(pause_flag==false)
+        {
+            pause_flag = true;
+            timer.cancel();
+            timer = null;
+            pause.setText("START");
+        }
+        else {
+            pause_flag = false;
+            pause.setText("PAUSE");
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            cloudA.setX(cloudA.getX());
+                            cloudB.setX(cloudB.getX());
+                            cloudC.setX(cloudC.getX());
+                            cloudD.setX(cloudD.getX());
+                            if (changePos())
+                            {
+                                bullet.setX(rocketButton.getX());
+                                bullet.setY(rocketButton.getY());
+                            }
+                        }
+                    });
+                }
+            }, 0, 10);
+        }
     }
 
     @Override
@@ -251,6 +306,18 @@ public class Levels extends AppCompatActivity {
         return temp;
 
 
+    }
+
+    protected void onPause()
+    {
+        super.onPause();
+        levelmusic.release();
+    }
+
+    protected void onResume()
+    {
+        super.onResume();
+        levelmusic.start();
     }
 }
 
