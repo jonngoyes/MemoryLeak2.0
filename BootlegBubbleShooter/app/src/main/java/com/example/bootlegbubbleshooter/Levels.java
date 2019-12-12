@@ -3,11 +3,15 @@ package com.example.bootlegbubbleshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +21,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Levels extends AppCompatActivity {
+
+    private int screenWidth;
+    private int screenHeight;
 
     // BULLET INITIALIZATION - BEGIN
     ImageView bullet;
@@ -48,10 +55,9 @@ public class Levels extends AppCompatActivity {
     private Timer timer = new Timer();
     // TIME HANDLER - END
 
+    //Screen Size
 
-    // SCREEN SIZE INITIALIZATION - BEGIN
-    private int screenWidth;
-    private int screenHeight;
+
     // SCREEN SIZE END
 
 
@@ -59,13 +65,21 @@ public class Levels extends AppCompatActivity {
     public static TextView q_data;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState) {
+
+        // SCREEN SIZE INITIALIZATION - BEGIN
+        WindowManager wm = getWindowManager();
+        Display disp = wm.getDefaultDisplay();
+        Point size = new Point();
+        disp.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
 
-        rocketButton = (ImageButton) findViewById(R.id.imageButton6);
-        bullet = (ImageView) findViewById(R.id.imageView2);
+        rocketButton = findViewById(R.id.imageButton6);
+        bullet = findViewById(R.id.imageView2);
         bullet.setVisibility(View.VISIBLE);
 
         rocketX = rocketButton.getX();
@@ -73,23 +87,23 @@ public class Levels extends AppCompatActivity {
         rocketButton.setX(rocketX);
         rocketButton.setY(rocketY);
 
-        cloudA = (ImageView) findViewById(R.id.CloudA);
+        cloudA = findViewById(R.id.CloudA);
         cloudA.setX(cloudA.getX());
         cloudA.setY(cloudA.getY());
 
         cloudAY = cloudA.getY();
         cloudAYorig = cloudAY;
 
-        cloudB = (ImageView) findViewById(R.id.CloudB);
+        cloudB = findViewById(R.id.CloudB);
         cloudB.setX(cloudB.getX());
         cloudB.setY(cloudB.getY());
         cloudBY = cloudB.getY();
         cloudBYorig = cloudBY;
 
-        cloudC = (ImageView) findViewById(R.id.CloudC);
+        cloudC = findViewById(R.id.CloudC);
         cloudC.setX(cloudC.getX());
         cloudC.setY(cloudC.getY());
-        cloudD = (ImageView) findViewById(R.id.CloudD);
+        cloudD = findViewById(R.id.CloudD);
         cloudD.setX(cloudD.getX());
         cloudD.setY(cloudD.getY());
 
@@ -131,7 +145,7 @@ public class Levels extends AppCompatActivity {
         });
 
         //Question Data
-        q_data = (TextView) findViewById(R.id.QuestionBox);
+        q_data = findViewById(R.id.QuestionBox);
         q_data.setMovementMethod(new ScrollingMovementMethod());
         fetchQuestionData process2 = new fetchQuestionData();
         process2.execute();
@@ -161,26 +175,26 @@ public class Levels extends AppCompatActivity {
     public int collisionDetect()
     {
 
-        int[] locationB = new int[2];
+     //   int[] locationB = new int[2];
         /*
         int[] locationD = new int[2];
         */
-        int [] locationBullet = new int [2];
-
-        cloudB.getLocationOnScreen(locationB);
 
 
-        if(locationBullet[0]>0 && locationBullet[0]<(screenWidth/4)) {
+       // cloudB.getLocationOnScreen(locationB);
+
+
+        if(bullet.getX()>0 && bullet.getX()<(screenWidth/4)) {
             return 0;
         }
-        else if(locationBullet[0]<(screenWidth/4) && locationBullet[0]<(screenWidth/2))
+        else if(bullet.getX()>(screenWidth/4) && bullet.getX()<(screenWidth/2))
         {
             return 1;
         }
-        else if(locationBullet[0]>(screenWidth/2) && locationBullet[0]<(3*screenWidth/4)) {
+        else if(bullet.getX()>(screenWidth/2) && bullet.getX()<(3*screenWidth/4)) {
             return 2;
         }
-        else if(locationBullet[0]>(3*screenWidth/4)&& locationBullet[0]<screenWidth){
+        else if(bullet.getX()>(3*screenWidth/4)&& bullet.getX()<screenWidth){
             return 3;
         }
         return 4;
@@ -229,7 +243,7 @@ public class Levels extends AppCompatActivity {
         switch (collisionDetect())
         {
             case 0:
-                Toast.makeText(Levels.this, "A works", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Levels.this, "A works",).show();
                 break;
             case 1:
                 Toast.makeText(Levels.this, "B works", Toast.LENGTH_SHORT).show();
