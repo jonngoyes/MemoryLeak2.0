@@ -277,19 +277,23 @@ public class Levels extends AppCompatActivity {
 
         if(bullet.getX()>0 && bullet.getX()<(screenWidth/4)) {
             IsPlayerCorrect('A');
+            cloudA.setVisibility(View.GONE);
             //return 'A';
         }
         else if(bullet.getX()<(screenWidth/4) && bullet.getX()<(screenWidth/2))
         {
             IsPlayerCorrect('B');
+            cloudB.setVisibility(View.GONE);
             //return 'B';
         }
         else if(bullet.getX()>(screenWidth/2) && bullet.getX()<(3*screenWidth/4)) {
             IsPlayerCorrect('C');
+            cloudC.setVisibility(View.GONE);
             //return 'C';
         }
         else if(bullet.getX()>(3*screenWidth/4)&& bullet.getX()<screenWidth){
             IsPlayerCorrect('D');
+            cloudD.setVisibility(View.GONE);
             //return 'D';
         }
         //return 'N'; //no collision yet
