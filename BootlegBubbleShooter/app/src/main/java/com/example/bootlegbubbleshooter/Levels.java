@@ -18,6 +18,14 @@ import java.util.TimerTask;
 
 public class Levels extends AppCompatActivity {
 
+    // fetchQuestionData Class INITIALIZATION - BEGIN
+    fetchQuestionData process2 = new fetchQuestionData();
+    // fetchQuestionData Class - END
+
+    //ANSWER INITIALIZATION - BEGIN
+    char correctAnswer;
+    // ANSWER - END
+
     // BULLET INITIALIZATION - BEGIN
     ImageView bullet;
     float x_bullet, y_bullet;
@@ -132,7 +140,6 @@ public class Levels extends AppCompatActivity {
         //Question Data
         q_data = (TextView) findViewById(R.id.QuestionBox);
         q_data.setMovementMethod(new ScrollingMovementMethod());
-        fetchQuestionData process2 = new fetchQuestionData();
         process2.execute();
     }
 
@@ -154,6 +161,32 @@ public class Levels extends AppCompatActivity {
                 rocketButton.setX(event.getX()-90);
         }
         return true;
+    }
+
+    public char answerDetect(int x, int y)
+    {
+        if (some coordinate)
+            return 'A';
+        else if (some coordinate)
+            return 'B';
+        else if (some coordinate)
+            return 'C';
+        else
+            return 'D';
+    }
+
+    public boolean PlayerIsCorrect()
+    {
+        correctAnswer = process2.getCorrectAnswer();
+        if (correctAnswer == answerDetect())
+        {
+            Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else {
+            Toast.makeText(Levels.this, "Incorrect!", Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
 
@@ -197,37 +230,12 @@ public class Levels extends AppCompatActivity {
         cloudD.setY(cloudD.getY() + 1);
         bullet.setY(bullet.getY() - 10);
 
+        collisionDetect();
+
+
         return temp;
 
 
     }
 }
-
-
-
- //           cloudAX = 1*screenWidth/5;//(float)Math.floor(Math.random() * (screenWidth - cloud1.getWidth()));
-//            cloudAY = -195.0f;
-//        }
-//        cloudA.setX(cloudAX);
-//        cloudA.setY(cloudAY + 10);
-
-//        cloud2Y +=10;
-//        if(cloud2.getY() > screenHeight)
-//        {
-//            cloud2X = screenWidth/1000;//(float)Math.floor(Math.random() * (screenWidth - cloud2.getWidth()));
-//            cloud2Y = -100.0f;
-//        }
-//        cloud2.setX(cloud2X);
-//        cloud2.setY(cloud2Y);
-//
-//        cloud3Y +=10;
-//        if(cloud3.getY() > screenHeight)
-//        {
-//            cloud3X = 1*screenWidth/2;//(float)Math.floor(Math.random() * (screenWidth - cloud3.getWidth()));
-//            cloud3Y = -100.0f;
-//        }
-//        cloud3.setX(cloud3X);
-//        cloud3.setY(cloud3Y);
-
-
 
