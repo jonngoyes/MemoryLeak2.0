@@ -245,14 +245,16 @@ public class Levels extends AppCompatActivity {
 
     public boolean IsPlayerCorrect(char playerAnswer)
     {
+        char correctAnswer;
         correctAnswer = process2.getCorrectAnswer();
         if (correctAnswer == playerAnswer)
         {
-            Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
+
+            rocketButton.setVisibility(View.GONE);
             return true;
         }
         else {
-            Toast.makeText(Levels.this, "Incorrect!", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(Levels.this, "Incorrect!", Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -274,20 +276,20 @@ public class Levels extends AppCompatActivity {
         //int[] locationB = cloudB.getLocationOnScreen();
 
 
-        if(locationBullet[0]>0 && locationBullet[0]<(screenWidth/4)) {
+        if(bullet.getX()>0 && bullet.getX()<(screenWidth/4)) {
             IsPlayerCorrect('A');
             //return 'A';
         }
-        else if(locationBullet[0]<(screenWidth/4) && locationBullet[0]<(screenWidth/2))
+        else if(bullet.getX()<(screenWidth/4) && bullet.getX()<(screenWidth/2))
         {
             IsPlayerCorrect('B');
             //return 'B';
         }
-        else if(locationBullet[0]>(screenWidth/2) && locationBullet[0]<(3*screenWidth/4)) {
+        else if(bullet.getX()>(screenWidth/2) && bullet.getX()<(3*screenWidth/4)) {
             IsPlayerCorrect('C');
             //return 'C';
         }
-        else if(locationBullet[0]>(3*screenWidth/4)&& locationBullet[0]<screenWidth){
+        else if(bullet.getX()>(3*screenWidth/4)&& bullet.getX()<screenWidth){
             IsPlayerCorrect('D');
             //return 'D';
         }
