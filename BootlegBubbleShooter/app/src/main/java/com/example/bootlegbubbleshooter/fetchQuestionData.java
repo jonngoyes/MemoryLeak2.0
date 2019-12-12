@@ -19,6 +19,8 @@ class fetchQuestionData extends AsyncTask<Void,Void,Void>{
     String data ="";
     String dataParsed = "";
     String singleParsed ="";
+    String correctAnswerString = "";
+    char correctAnswer;
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -35,16 +37,18 @@ class fetchQuestionData extends AsyncTask<Void,Void,Void>{
 
 
             JSONArray qfact = new JSONArray(data);
-            Random rand = new Random();
-            int randInt = rand.nextInt(qfact.length());
-            String number = Integer.toString(randInt+1);
+            //Random rand = new Random();
+            //int randInt = rand.nextInt(qfact.length());
+            //String number = Integer.toString(randInt+1);
             for(int i =0 ;i < qfact.length(); i++){
-                if(i==randInt)
-                {
+                //if(i==randInt)
+                //{
                     JSONObject JO = (JSONObject) qfact.get(i);
-                    singleParsed = JO.get("Q"+number) + "\n";
+                    singleParsed = JO.get("Q"+Integer.toString(i+1)) + "\n";
+                    correctAnswerString = JO.get("Answer") + "\n";
+                    correctAnswer = correctAnswerString.charAt(0);
                     dataParsed = dataParsed + singleParsed + "\n";
-                }
+                //}
             }
 
         } catch (MalformedURLException e) {
@@ -57,6 +61,12 @@ class fetchQuestionData extends AsyncTask<Void,Void,Void>{
 
         return null;
     }
+
+    public char getCorrectAnswer()
+    {
+        return correctAnswer;
+    }
+
 
     @Override
     protected void onPostExecute(Void aVoid) {

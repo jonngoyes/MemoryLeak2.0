@@ -3,15 +3,13 @@ package com.example.bootlegbubbleshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,8 +20,19 @@ import java.util.TimerTask;
 
 public class Levels extends AppCompatActivity {
 
-    private int screenWidth;
-    private int screenHeight;
+    // fetchQuestionData Class INITIALIZATION - BEGIN
+    fetchQuestionData process2 = new fetchQuestionData();
+    // fetchQuestionData Class - END
+
+    //ANSWER INITIALIZATION - BEGIN
+    char correctAnswer;
+    // ANSWER - END
+
+    MediaPlayer levelmusic;
+
+    //Pause Button
+    private Button pause;
+    private boolean pause_flag;
 
     // BULLET INITIALIZATION - BEGIN
     ImageView bullet;
@@ -55,9 +64,10 @@ public class Levels extends AppCompatActivity {
     private Timer timer = new Timer();
     // TIME HANDLER - END
 
-    //Screen Size
 
-
+    // SCREEN SIZE INITIALIZATION - BEGIN
+    private int screenWidth;
+    private int screenHeight;
     // SCREEN SIZE END
 
 
@@ -65,21 +75,21 @@ public class Levels extends AppCompatActivity {
     public static TextView q_data;
 
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
-
-        // SCREEN SIZE INITIALIZATION - BEGIN
-        WindowManager wm = getWindowManager();
-        Display disp = wm.getDefaultDisplay();
-        Point size = new Point();
-        disp.getSize(size);
-        screenWidth = size.x;
-        screenHeight = size.y;
+    protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
 
-        rocketButton = findViewById(R.id.imageButton6);
-        bullet = findViewById(R.id.imageView2);
+        //Levels Background Music
+        levelmusic = MediaPlayer.create(this,R.raw.levanter);
+        levelmusic.setLooping(true);
+        levelmusic.setScreenOnWhilePlaying(true);
+        levelmusic.setVolume(100,100);
+        levelmusic.start();
+
+
+        rocketButton = (ImageButton) findViewById(R.id.imageButton6);
+        bullet = (ImageView) findViewById(R.id.imageView2);
         bullet.setVisibility(View.VISIBLE);
 
         rocketX = rocketButton.getX();
@@ -87,23 +97,23 @@ public class Levels extends AppCompatActivity {
         rocketButton.setX(rocketX);
         rocketButton.setY(rocketY);
 
-        cloudA = findViewById(R.id.CloudA);
+        cloudA = (ImageView) findViewById(R.id.CloudA);
         cloudA.setX(cloudA.getX());
         cloudA.setY(cloudA.getY());
 
         cloudAY = cloudA.getY();
         cloudAYorig = cloudAY;
 
-        cloudB = findViewById(R.id.CloudB);
+        cloudB = (ImageView) findViewById(R.id.CloudB);
         cloudB.setX(cloudB.getX());
         cloudB.setY(cloudB.getY());
         cloudBY = cloudB.getY();
         cloudBYorig = cloudBY;
 
-        cloudC = findViewById(R.id.CloudC);
+        cloudC = (ImageView) findViewById(R.id.CloudC);
         cloudC.setX(cloudC.getX());
         cloudC.setY(cloudC.getY());
-        cloudD = findViewById(R.id.CloudD);
+        cloudD = (ImageView) findViewById(R.id.CloudD);
         cloudD.setX(cloudD.getX());
         cloudD.setY(cloudD.getY());
 
@@ -145,10 +155,48 @@ public class Levels extends AppCompatActivity {
         });
 
         //Question Data
-        q_data = findViewById(R.id.QuestionBox);
+        q_data = (TextView) findViewById(R.id.QuestionBox);
         q_data.setMovementMethod(new ScrollingMovementMethod());
-        fetchQuestionData process2 = new fetchQuestionData();
         process2.execute();
+
+        //Pause Button
+        pause = (Button) findViewById(R.id.pauseButton);
+
+    }
+
+    public void pausePushed(View view)
+    {
+        if(pause_flag==false)
+        {
+            pause_flag = true;
+            timer.cancel();
+            timer = null;
+            pause.setText("START");
+        }
+        else {
+            pause_flag = false;
+            pause.setText("PAUSE");
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            cloudA.setX(cloudA.getX());
+                            cloudB.setX(cloudB.getX());
+                            cloudC.setX(cloudC.getX());
+                            cloudD.setX(cloudD.getX());
+                            if (changePos())
+                            {
+                                bullet.setX(rocketButton.getX());
+                                bullet.setY(rocketButton.getY());
+                            }
+                        }
+                    });
+                }
+            }, 0, 10);
+        }
     }
 
     @Override
@@ -171,33 +219,67 @@ public class Levels extends AppCompatActivity {
         return true;
     }
 
+//    public char answerDetect(int x, int y)
+//    {
+//        if (some coordinate)
+//            return 'A';
+//        else if (some coordinate)
+//            return 'B';
+//        else if (some coordinate)
+//            return 'C';
+//        else
+//            return 'D';
+//    }
 
-    public int collisionDetect()
+    public boolean IsPlayerCorrect(char playerAnswer)
+    {
+        correctAnswer = process2.getCorrectAnswer();
+        if (correctAnswer == playerAnswer)
+        {
+            Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else {
+            Toast.makeText(Levels.this, "Incorrect!", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+
+    public void collisionDetect()
     {
 
-     //   int[] locationB = new int[2];
         /*
         int[] locationD = new int[2];
         */
+        int [] locationBullet = new int [2];
+        bullet.getLocationOnScreen(locationBullet);
+        float bullet_x = locationBullet[0];
+        float bullet_y = locationBullet[1];
+        System.out.print(bullet_x);
+        System.out.print(bullet_y);
+
+        //int[] locationB = cloudB.getLocationOnScreen();
 
 
-       // cloudB.getLocationOnScreen(locationB);
-
-
-        if(bullet.getX()>0 && bullet.getX()<(screenWidth/4)) {
-            return 0;
+        if(locationBullet[0]>0 && locationBullet[0]<(screenWidth/4)) {
+            IsPlayerCorrect('A');
+            //return 'A';
         }
-        else if(bullet.getX()>(screenWidth/4) && bullet.getX()<(screenWidth/2))
+        else if(locationBullet[0]<(screenWidth/4) && locationBullet[0]<(screenWidth/2))
         {
-            return 1;
+            IsPlayerCorrect('B');
+            //return 'B';
         }
-        else if(bullet.getX()>(screenWidth/2) && bullet.getX()<(3*screenWidth/4)) {
-            return 2;
+        else if(locationBullet[0]>(screenWidth/2) && locationBullet[0]<(3*screenWidth/4)) {
+            IsPlayerCorrect('C');
+            //return 'C';
         }
-        else if(bullet.getX()>(3*screenWidth/4)&& bullet.getX()<screenWidth){
-            return 3;
+        else if(locationBullet[0]>(3*screenWidth/4)&& locationBullet[0]<screenWidth){
+            IsPlayerCorrect('D');
+            //return 'D';
         }
-        return 4;
+        //return 'N'; //no collision yet
     }
 
     public boolean changePos() {
@@ -240,59 +322,45 @@ public class Levels extends AppCompatActivity {
         cloudD.setY(cloudD.getY() + 1);
         bullet.setY(bullet.getY() - 10);
 
-        switch (collisionDetect())
-        {
-            case 0:
-                Toast.makeText(Levels.this, "A works",).show();
-                break;
-            case 1:
-                Toast.makeText(Levels.this, "B works", Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
-                Toast.makeText(Levels.this, "C works", Toast.LENGTH_SHORT).show();
-                break;
-            case 3:
-                Toast.makeText(Levels.this, "D works", Toast.LENGTH_SHORT).show();
-                break;
-            case 4:
-                Toast.makeText(Levels.this, "No answer given", Toast.LENGTH_SHORT).show();
-                break;
-        }
 
-
-
+        collisionDetect();
+//
+//        switch (collisionDetect())
+//        {
+//            case 0:
+//                Toast.makeText(Levels.this, "A works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 1:
+//                Toast.makeText(Levels.this, "B works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 2:
+//                Toast.makeText(Levels.this, "C works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 3:
+//                Toast.makeText(Levels.this, "D works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 4:
+//                Toast.makeText(Levels.this, "No answer given", Toast.LENGTH_SHORT).show();
+//                break;
+//        }
+//
+//        IsPlayerCorrect();
 
         return temp;
 
 
     }
+
+    protected void onPause()
+    {
+        super.onPause();
+        levelmusic.release();
+    }
+
+    protected void onResume()
+    {
+        super.onResume();
+        levelmusic.start();
+    }
 }
-
-
-
- //           cloudAX = 1*screenWidth/5;//(float)Math.floor(Math.random() * (screenWidth - cloud1.getWidth()));
-//            cloudAY = -195.0f;
-//        }
-//        cloudA.setX(cloudAX);
-//        cloudA.setY(cloudAY + 10);
-
-//        cloud2Y +=10;
-//        if(cloud2.getY() > screenHeight)
-//        {
-//            cloud2X = screenWidth/1000;//(float)Math.floor(Math.random() * (screenWidth - cloud2.getWidth()));
-//            cloud2Y = -100.0f;
-//        }
-//        cloud2.setX(cloud2X);
-//        cloud2.setY(cloud2Y);
-//
-//        cloud3Y +=10;
-//        if(cloud3.getY() > screenHeight)
-//        {
-//            cloud3X = 1*screenWidth/2;//(float)Math.floor(Math.random() * (screenWidth - cloud3.getWidth()));
-//            cloud3Y = -100.0f;
-//        }
-//        cloud3.setX(cloud3X);
-//        cloud3.setY(cloud3Y);
-
-
 
