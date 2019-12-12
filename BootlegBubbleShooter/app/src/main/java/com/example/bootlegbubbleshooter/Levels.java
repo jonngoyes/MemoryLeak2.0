@@ -3,11 +3,13 @@ package com.example.bootlegbubbleshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +27,12 @@ public class Levels extends AppCompatActivity {
     //ANSWER INITIALIZATION - BEGIN
     char correctAnswer;
     // ANSWER - END
+
+    MediaPlayer levelmusic;
+
+    //Pause Button
+    private Button pause;
+    private boolean pause_flag;
 
     // BULLET INITIALIZATION - BEGIN
     ImageView bullet;
@@ -72,6 +80,14 @@ public class Levels extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
 
+        //Levels Background Music
+        levelmusic = MediaPlayer.create(this,R.raw.levanter);
+        levelmusic.setLooping(true);
+        levelmusic.setScreenOnWhilePlaying(true);
+        levelmusic.setVolume(100,100);
+        levelmusic.start();
+
+
         rocketButton = (ImageButton) findViewById(R.id.imageButton6);
         bullet = (ImageView) findViewById(R.id.imageView2);
         bullet.setVisibility(View.VISIBLE);
@@ -111,11 +127,12 @@ public class Levels extends AppCompatActivity {
                         cloudB.setX(cloudB.getX());
                         cloudC.setX(cloudC.getX());
                         cloudD.setX(cloudD.getX());
-                        if (changePos())
-                        {
+                        if (changePos()) {
                             bullet.setX(rocketButton.getX());
                             bullet.setY(rocketButton.getY());
                         }
+
+
                     }
                 });
             }
@@ -126,10 +143,10 @@ public class Levels extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Levels.this, "It works", Toast.LENGTH_LONG).show();
-                x_bullet = rocketButton.getX() +26;
-               y_bullet = rocketButton.getY() - 90;
+                x_bullet = rocketButton.getX() + 26;
+                y_bullet = rocketButton.getY() - 90;
                 bullet.setX(x_bullet);
-               bullet.setY(y_bullet);
+                bullet.setY(y_bullet);
 
                 bullet.setVisibility(View.VISIBLE);
 
@@ -141,6 +158,45 @@ public class Levels extends AppCompatActivity {
         q_data = (TextView) findViewById(R.id.QuestionBox);
         q_data.setMovementMethod(new ScrollingMovementMethod());
         process2.execute();
+
+        //Pause Button
+        pause = (Button) findViewById(R.id.pauseButton);
+
+    }
+
+    public void pausePushed(View view)
+    {
+        if(pause_flag==false)
+        {
+            pause_flag = true;
+            timer.cancel();
+            timer = null;
+            pause.setText("START");
+        }
+        else {
+            pause_flag = false;
+            pause.setText("PAUSE");
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            cloudA.setX(cloudA.getX());
+                            cloudB.setX(cloudB.getX());
+                            cloudC.setX(cloudC.getX());
+                            cloudD.setX(cloudD.getX());
+                            if (changePos())
+                            {
+                                bullet.setX(rocketButton.getX());
+                                bullet.setY(rocketButton.getY());
+                            }
+                        }
+                    });
+                }
+            }, 0, 10);
+        }
     }
 
     @Override
@@ -158,27 +214,27 @@ public class Levels extends AppCompatActivity {
                 bullet.setVisibility(View.GONE);
 
             case MotionEvent.ACTION_MOVE:
-                rocketButton.setX(event.getX()-90);
+                rocketButton.setX(event.getX() - 90);
         }
         return true;
     }
 
-    public char answerDetect(int x, int y)
-    {
-        if (some coordinate)
-            return 'A';
-        else if (some coordinate)
-            return 'B';
-        else if (some coordinate)
-            return 'C';
-        else
-            return 'D';
-    }
+//    public char answerDetect(int x, int y)
+//    {
+//        if (some coordinate)
+//            return 'A';
+//        else if (some coordinate)
+//            return 'B';
+//        else if (some coordinate)
+//            return 'C';
+//        else
+//            return 'D';
+//    }
 
-    public boolean PlayerIsCorrect()
+    public boolean IsPlayerCorrect(char playerAnswer)
     {
         correctAnswer = process2.getCorrectAnswer();
-        if (correctAnswer == answerDetect())
+        if (correctAnswer == playerAnswer)
         {
             Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
             return true;
@@ -189,6 +245,42 @@ public class Levels extends AppCompatActivity {
         }
     }
 
+
+    public void collisionDetect()
+    {
+
+        /*
+        int[] locationD = new int[2];
+        */
+        int [] locationBullet = new int [2];
+        bullet.getLocationOnScreen(locationBullet);
+        float bullet_x = locationBullet[0];
+        float bullet_y = locationBullet[1];
+        System.out.print(bullet_x);
+        System.out.print(bullet_y);
+
+        //int[] locationB = cloudB.getLocationOnScreen();
+
+
+        if(locationBullet[0]>0 && locationBullet[0]<(screenWidth/4)) {
+            IsPlayerCorrect('A');
+            //return 'A';
+        }
+        else if(locationBullet[0]<(screenWidth/4) && locationBullet[0]<(screenWidth/2))
+        {
+            IsPlayerCorrect('B');
+            //return 'B';
+        }
+        else if(locationBullet[0]>(screenWidth/2) && locationBullet[0]<(3*screenWidth/4)) {
+            IsPlayerCorrect('C');
+            //return 'C';
+        }
+        else if(locationBullet[0]>(3*screenWidth/4)&& locationBullet[0]<screenWidth){
+            IsPlayerCorrect('D');
+            //return 'D';
+        }
+        //return 'N'; //no collision yet
+    }
 
     public boolean changePos() {
 
@@ -230,12 +322,45 @@ public class Levels extends AppCompatActivity {
         cloudD.setY(cloudD.getY() + 1);
         bullet.setY(bullet.getY() - 10);
 
-        collisionDetect();
 
+        collisionDetect();
+//
+//        switch (collisionDetect())
+//        {
+//            case 0:
+//                Toast.makeText(Levels.this, "A works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 1:
+//                Toast.makeText(Levels.this, "B works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 2:
+//                Toast.makeText(Levels.this, "C works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 3:
+//                Toast.makeText(Levels.this, "D works", Toast.LENGTH_SHORT).show();
+//                break;
+//            case 4:
+//                Toast.makeText(Levels.this, "No answer given", Toast.LENGTH_SHORT).show();
+//                break;
+//        }
+//
+//        IsPlayerCorrect();
 
         return temp;
 
 
+    }
+
+    protected void onPause()
+    {
+        super.onPause();
+        levelmusic.release();
+    }
+
+    protected void onResume()
+    {
+        super.onResume();
+        levelmusic.start();
     }
 }
 
