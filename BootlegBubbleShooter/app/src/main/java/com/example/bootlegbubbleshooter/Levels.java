@@ -3,12 +3,15 @@ package com.example.bootlegbubbleshooter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,6 +22,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Levels extends AppCompatActivity {
+    private int screenWidth;
+    private int screenHeight;
 
     // fetchQuestionData Class INITIALIZATION - BEGIN
     fetchQuestionData process2 = new fetchQuestionData();
@@ -66,8 +71,8 @@ public class Levels extends AppCompatActivity {
 
 
     // SCREEN SIZE INITIALIZATION - BEGIN
-    private int screenWidth;
-    private int screenHeight;
+  //  private int screenWidth;
+ //   private int screenHeight;
     // SCREEN SIZE END
 
 
@@ -76,6 +81,13 @@ public class Levels extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        WindowManager wm = getWindowManager();
+        Display disp = wm.getDefaultDisplay();
+        Point size = new Point();
+        disp.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_levels);
