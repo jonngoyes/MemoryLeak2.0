@@ -103,11 +103,12 @@ public class Levels extends AppCompatActivity {
                         cloudB.setX(cloudB.getX());
                         cloudC.setX(cloudC.getX());
                         cloudD.setX(cloudD.getX());
-                        if (changePos())
-                        {
+                        if (changePos()) {
                             bullet.setX(rocketButton.getX());
                             bullet.setY(rocketButton.getY());
                         }
+
+
                     }
                 });
             }
@@ -118,10 +119,10 @@ public class Levels extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(Levels.this, "It works", Toast.LENGTH_LONG).show();
-                x_bullet = rocketButton.getX() +26;
-               y_bullet = rocketButton.getY() - 90;
+                x_bullet = rocketButton.getX() + 26;
+                y_bullet = rocketButton.getY() - 90;
                 bullet.setX(x_bullet);
-               bullet.setY(y_bullet);
+                bullet.setY(y_bullet);
 
                 bullet.setVisibility(View.VISIBLE);
 
@@ -151,11 +152,39 @@ public class Levels extends AppCompatActivity {
                 bullet.setVisibility(View.GONE);
 
             case MotionEvent.ACTION_MOVE:
-                rocketButton.setX(event.getX()-90);
+                rocketButton.setX(event.getX() - 90);
         }
         return true;
     }
 
+
+    public int collisionDetect()
+    {
+
+        int[] locationB = new int[2];
+        /*
+        int[] locationD = new int[2];
+        */
+        int [] locationBullet = new int [2];
+
+        cloudB.getLocationOnScreen(locationB);
+
+
+        if(locationBullet[0]>0 && locationBullet[0]<(screenWidth/4)) {
+            return 0;
+        }
+        else if(locationBullet[0]<(screenWidth/4) && locationBullet[0]<(screenWidth/2))
+        {
+            return 1;
+        }
+        else if(locationBullet[0]>(screenWidth/2) && locationBullet[0]<(3*screenWidth/4)) {
+            return 2;
+        }
+        else if(locationBullet[0]>(3*screenWidth/4)&& locationBullet[0]<screenWidth){
+            return 3;
+        }
+        return 4;
+    }
 
     public boolean changePos() {
 
@@ -196,6 +225,28 @@ public class Levels extends AppCompatActivity {
         cloudC.setY(cloudC.getY() + 1);
         cloudD.setY(cloudD.getY() + 1);
         bullet.setY(bullet.getY() - 10);
+
+        switch (collisionDetect())
+        {
+            case 0:
+                Toast.makeText(Levels.this, "A works", Toast.LENGTH_SHORT).show();
+                break;
+            case 1:
+                Toast.makeText(Levels.this, "B works", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(Levels.this, "C works", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:
+                Toast.makeText(Levels.this, "D works", Toast.LENGTH_SHORT).show();
+                break;
+            case 4:
+                Toast.makeText(Levels.this, "No answer given", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+
+
 
         return temp;
 
