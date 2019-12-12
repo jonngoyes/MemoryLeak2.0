@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -130,6 +131,7 @@ public class Levels extends AppCompatActivity {
 
         //Question Data
         q_data = (TextView) findViewById(R.id.QuestionBox);
+        q_data.setMovementMethod(new ScrollingMovementMethod());
         fetchQuestionData process2 = new fetchQuestionData();
         process2.execute();
     }
