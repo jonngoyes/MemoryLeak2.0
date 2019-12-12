@@ -249,12 +249,11 @@ public class Levels extends AppCompatActivity {
         correctAnswer = process2.getCorrectAnswer();
         if (correctAnswer == playerAnswer)
         {
-
-            rocketButton.setVisibility(View.GONE);
+            Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
             return true;
         }
         else {
-          //  Toast.makeText(Levels.this, "Incorrect!", Toast.LENGTH_LONG).show();
+            Toast.makeText(Levels.this, "Incorrect", Toast.LENGTH_LONG).show();
             return false;
         }
     }
