@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.CollationElementIterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,9 +79,12 @@ public class Levels extends AppCompatActivity {
 
     //Question text
     public static TextView q_data;
+    private Toast myToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        myToast = Toast.makeText(getApplicationContext(), null, Toast.LENGTH_SHORT);
+
         WindowManager wm = getWindowManager();
         Display disp = wm.getDefaultDisplay();
         Point size = new Point();
@@ -154,7 +158,7 @@ public class Levels extends AppCompatActivity {
         rocketButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Levels.this, "It works", Toast.LENGTH_LONG).show();
+               // Toast.makeText(Levels.this, "It works", Toast.LENGTH_LONG).show();
                 x_bullet = rocketButton.getX() + 26;
                 y_bullet = rocketButton.getY() - 90;
                 bullet.setX(x_bullet);
@@ -249,11 +253,18 @@ public class Levels extends AppCompatActivity {
         correctAnswer = process2.getCorrectAnswer();
         if (correctAnswer == playerAnswer)
         {
-            Toast.makeText(Levels.this, "Correct", Toast.LENGTH_LONG).show();
+
+            myToast.show();
+            myToast.setText("Correct");
+           // myToast.setText(null);
             return true;
+
         }
         else {
-            Toast.makeText(Levels.this, "Incorrect", Toast.LENGTH_LONG).show();
+         //   Toast.makeText(Levels.this, "Incorrect", Toast.LENGTH_LONG).show();
+
+            //myToast.setText("Incorrect");
+          //  myToast.show();
             return false;
         }
     }
