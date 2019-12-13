@@ -280,7 +280,7 @@ public class Levels extends AppCompatActivity {
             cloudA.setVisibility(View.GONE);
             //return 'A';
         }
-        else if(bullet.getX()<(screenWidth/4) && bullet.getX()<(screenWidth/2))
+        else if(bullet.getX()>(screenWidth/4) && bullet.getX()<(screenWidth/2))
         {
             IsPlayerCorrect('B');
             cloudB.setVisibility(View.GONE);
@@ -321,15 +321,19 @@ public class Levels extends AppCompatActivity {
 
 
         if (cloudA.getY() > 2600) {
+            cloudA.setVisibility(View.VISIBLE);
             cloudA.setY(0.0f);
         }
         if (cloudB.getY() > 2600) {
+            cloudB.setVisibility(View.VISIBLE);
             cloudB.setY(0.0f);
         }
         if (cloudC.getY() > 2600) {
+            cloudC.setVisibility(View.VISIBLE);
             cloudC.setY(0.0f);
         }
         if (cloudD.getY() > 2600) {
+            cloudD.setVisibility(View.VISIBLE);
             cloudD.setY(0.0f);
         }
 
