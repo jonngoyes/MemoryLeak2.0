@@ -76,7 +76,7 @@ public class Levels extends AppCompatActivity {
  //   private int screenHeight;
     // SCREEN SIZE END
 
-
+    private Button boss;
     //Question text
     public static TextView q_data;
     private Toast myToast;
@@ -177,6 +177,15 @@ public class Levels extends AppCompatActivity {
 
         //Pause Button
         pause = (Button) findViewById(R.id.pauseButton);
+
+        //Transition to Boss Level
+        boss= (Button) this.findViewById(R.id.bossbutton);
+        boss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartOnClick();
+            }
+        });
 
     }
 
@@ -393,6 +402,12 @@ public class Levels extends AppCompatActivity {
     {
         super.onResume();
         levelmusic.start();
+    }
+
+    public void StartOnClick()
+    {
+        Intent intent = new Intent(this,MainActivity2.class);
+        startActivity(intent);
     }
 }
 
