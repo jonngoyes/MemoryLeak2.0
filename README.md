@@ -1,7 +1,9 @@
 # MemoryLeak2.0
 
 Project Name: MemoryLeak2.0 
+
 Members: Samantha Au, Victor Hui, Jonathan Ngo, Daniel Li, Julia Zeng
+
 Email: zjulia@bu.edu, samau@bu.edu, dli0793@bu.edu, jonngo@bu.edu, victohu1@bu.edu
 
 Overview: 
